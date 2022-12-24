@@ -13,7 +13,7 @@ const GET_LESSON_QUERY = gql`
     }
 `
 
-interface GetLessonQueryResponseInterface {
+interface GetLessonQueryResponse {
     lessons: {
         id: string;
         title: string;
@@ -24,7 +24,7 @@ interface GetLessonQueryResponseInterface {
 }
 
 export function Sidebar() {
-    const { data } = useQuery<GetLessonQueryResponseInterface>(GET_LESSON_QUERY)
+    const { data } = useQuery<GetLessonQueryResponse>(GET_LESSON_QUERY)
 
     return (
         <aside className="w-[348px] bg-gray-700 p-6 border-l border-gray-600">

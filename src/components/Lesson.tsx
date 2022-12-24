@@ -3,21 +3,21 @@ import { isPast, format } from 'date-fns';
 import ptBR from 'date-fns/locale/pt-BR';
 import { Link } from 'react-router-dom';
 
-interface LessonPropsInterface {
+interface LessonProps {
     title: string;
     slug: string;
     availableAt: Date;
     type: 'live' | 'class';
 }
 
-export function Lesson(props: LessonPropsInterface) {
+export function Lesson(props: LessonProps) {
     const isLessonAvailable = isPast(props.availableAt);
     const availableDateFormatted = format(props.availableAt, "EEEE' • 'd' de 'MMMM' • 'k'h'mm", {
         locale: ptBR,
     })
 
     return (
-        <Link to={`/event/lessons/${props.slug}`} className="group">
+        <Link to={`/event/lesson/${props.slug}`} className="group">
             <span className="text-gray-300">
                 {availableDateFormatted}
             </span>

@@ -1,26 +1,27 @@
 import { Player, Youtube, DefaultUi } from "@vime/react";
-import { CaretRight, DiscordLogo, FileArrowDown, Lightning } from "phosphor-react";
+import { CaretRight, DiscordLogo, FileArrowDown, ImageSquare, Lightning } from "phosphor-react";
 import { gql, useQuery } from "@apollo/client";
+import { Loading } from "./Loading";
 
 import '@vime/core/themes/default.css';
 
 const GET_LESSON_BY_SLUG_QUERY = gql`
-    query GetLessonsBySlug ($slug: String) {
-        lessons(where: {slug: $slug}) {
-            title
-            videoId
-            description
-            teacher {
-                bio
-                avatarURL
-                name
-            }
-        }
+    query GetLessonBySlug($slug:String) {
+    lesson(where: {slug: $slug}) {
+      title
+      videoId
+      description
+      teacher {
+        name
+        bio
+        avatarURL
+      }
     }
+  }
 `
 
-interface GetLessonBySlugResponseInterface {
-    lessons: {
+interface GetLessonBySlugResponse {
+    lesson: {
         title: string;
         videoId: string;
         description: string;
@@ -32,26 +33,21 @@ interface GetLessonBySlugResponseInterface {
     }
 }
 
-interface VideoPropsInterface {
+interface VideoProps {
     lessonSlug: string;
 }
 
-export function Video(props: VideoPropsInterface) {
+export function Video(props: VideoProps) {
 
-    const { data } = useQuery<GetLessonBySlugResponseInterface>(GET_LESSON_BY_SLUG_QUERY, {
+    const { data } = useQuery<GetLessonBySlugResponse>(GET_LESSON_BY_SLUG_QUERY, {
         variables: {
             slug: props.lessonSlug,
         }
-    })
-
-    console.log('data');
-    console.log(data);
+    });
 
     if (!data) {
         return (
-            <div className="flex-1">
-                <p>Loading...</p>
-            </div>
+            <Loading />
         )
     }
 
@@ -60,7 +56,7 @@ export function Video(props: VideoPropsInterface) {
             <div className="bg-black flex justify-center">
                 <div className="h-full w-full max-w-[1100px] max-h-[60vh] aspect-video">
                     <Player>
-                        <Youtube videoId={data.lessons.videoId} />
+                        <Youtube videoId={data.lesson.videoId} />
                         <DefaultUi />
                     </Player>
                 </div>
@@ -70,24 +66,24 @@ export function Video(props: VideoPropsInterface) {
                 <div className="flex items-start gap-16">
                     <div className="flex-1">
                         <h1 className="text-2xl font-bold">
-                            {data.lessons.title}
+                            {data.lesson.title}
                         </h1>
                         <p className="mt-4 text-gray-200 leading-relaxed">
-                            {data.lessons.description}
+                            {data.lesson.description}
                         </p>
 
                         <div className="flex items-center gap-4 mt-6">
                             <img
                                 className="h-16 w-16 rounded-full border-2 border-blue-500"
-                                src={data.lessons.teacher.avatarURL}
+                                src={data.lesson.teacher.avatarURL}
                                 alt="" />
 
                             <div className="leading-relaxed">
                                 <strong className="font-bold text-2xl block">
-                                    {data.lessons.teacher.name}
+                                    {data.lesson.teacher.name}
                                 </strong>
                                 <span className="text-gray-200 text-sm block">
-                                    {data.lessons.teacher.bio}
+                                    {data.lesson.teacher.bio}
                                 </span>
                             </div>
                         </div>
@@ -124,7 +120,7 @@ export function Video(props: VideoPropsInterface) {
 
                     <a href="" className="bg-gray-700 rounded overflow-hidden flex items-stretch gap-6 hover:bg-gray-600 transition-colors">
                         <div className="bg-green-700 h-full p-6 flex items-center">
-                            <FileArrowDown size={40} />
+                            <ImageSquare size={40} />
                         </div>
                         <div className="py-6 leading-relaxed">
                             <strong className="text-2xl">Wallpapers exclusivos</strong>
